@@ -7,10 +7,11 @@ export default function ProductHighlights() {
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
-        fetch("/productsdata.json")
+        // Fetch products from your API route
+        fetch("/api/products")
             .then((res) => res.json())
-            .then((data) => setProducts(data))
-            .catch((error) => console.error("Error fetching services:", error));
+            .then((data) => setProducts(data.slice(0, 4))) // Only show 4
+            .catch((error) => console.error("Error fetching products:", error));
     }, []);
 
     return (
@@ -47,6 +48,16 @@ export default function ProductHighlights() {
                         </div>
                     </div>
                 ))}
+            </div>
+
+            {/* See More Products Button */}
+            <div className="text-center mt-10">
+                <Link
+                    href="/product"
+                    className="inline-block bg-primary text-white font-semibold py-3 px-6 rounded-lg hover:bg-primary/90 transition"
+                >
+                    See More Products
+                </Link>
             </div>
         </section>
     );
