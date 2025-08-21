@@ -4,12 +4,12 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 
 export default function ProductHighlights() {
-    const [services, setServices] = useState([]);
+    const [products, setProducts] = useState([]);
 
     useEffect(() => {
-        fetch("/services.json")
+        fetch("/productsdata.json")
             .then((res) => res.json())
-            .then((data) => setServices(data))
+            .then((data) => setProducts(data))
             .catch((error) => console.error("Error fetching services:", error));
     }, []);
 
@@ -20,7 +20,7 @@ export default function ProductHighlights() {
             </h2>
 
             <div className="flex flex-col gap-10">
-                {services.map((service) => (
+                {products.map((service) => (
                     <div
                         key={service.service_id}
                         className="flex flex-col md:flex-row-reverse items-center gap-6 bg-base-200 text-primary-content p-6 rounded-lg shadow-md border"
@@ -39,7 +39,7 @@ export default function ProductHighlights() {
                                 {service.description}
                             </p>
                             <Link
-                                href={`/services/${service.service_id}`}
+                                href={`/product/${service.service_id}`}
                                 className="bg-base-300 text-neutral hover:bg-blue-600 hover:text-white font-semibold py-2 px-5 sm:py-3 sm:px-6 rounded-lg transition"
                             >
                                 View Product
