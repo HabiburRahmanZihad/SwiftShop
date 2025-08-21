@@ -1,7 +1,10 @@
 'use client';
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import Swal from 'sweetalert2'; // ✅ Import SweetAlert2
 
 export default function AddProductPage() {
     const {
@@ -11,15 +14,71 @@ export default function AddProductPage() {
         formState: { errors },
     } = useForm();
 
-    const onSubmit = (data) => {
-        console.log("✅ Product Added:", data);
-        reset();
+    const { data: session, status } = useSession();
+    const router = useRouter();
+    const [loading, setLoading] = useState(false);
+
+    // ✅ Redirect unauthenticated users to sign-in page
+    useEffect(() => {
+        if (status === "unauthenticated") {
+            router.push("/signin");
+        }
+    }, [status, router]);
+
+    if (status === "loading") return <p className="text-center mt-20">Loading...</p>;
+
+    // ✅ Form submit handler
+    const onSubmit = async (data) => {
+        if (!session?.user) return;
+
+        setLoading(true);
+
+        const payload = {
+            service_id: Date.now().toString().slice(-6), // random 6-digit string
+            title: data.name,
+            img: data.image,
+            price: parseFloat(data.price).toFixed(2),
+            description: data.description,
+        };
+
+        try {
+            const res = await fetch("/api/products", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+
+            const result = await res.json();
+
+            if (!res.ok) throw new Error(result.message || "Something went wrong");
+
+            // ✅ Show success alert
+            await Swal.fire({
+                icon: 'success',
+                title: 'Product Added',
+                text: '✅ Product added successfully!',
+                confirmButtonColor: '#3085d6',
+            });
+
+            reset(); // ✅ Clear the form
+        } catch (err) {
+            // ❌ Show error alert
+            await Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: err.message || 'Something went wrong!',
+                confirmButtonColor: '#d33',
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
         <div className="bg-base-200 flex items-center justify-center px-4 py-12">
             <div className="w-full max-w-7xl bg-white shadow-xl rounded-xl overflow-hidden grid md:grid-cols-2 gap-8">
-
                 {/* Left: Image */}
                 <div className="hidden md:flex items-center justify-center bg-primary/10 p-6">
                     <img
@@ -37,7 +96,6 @@ export default function AddProductPage() {
                     </h2>
 
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-
                         {/* Product Name */}
                         <div>
                             <label htmlFor="name" className="block mb-1 font-medium text-gray-700">
@@ -50,9 +108,7 @@ export default function AddProductPage() {
                                 {...register("name", { required: "Product name is required" })}
                                 className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:outline-none"
                             />
-                            {errors.name && (
-                                <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
-                            )}
+                            {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
                         </div>
 
                         {/* Description */}
@@ -66,9 +122,7 @@ export default function AddProductPage() {
                                 {...register("description", { required: "Description is required" })}
                                 className="w-full border border-gray-300 rounded-lg px-4 py-2 h-28 resize-none focus:ring-2 focus:ring-primary focus:outline-none"
                             ></textarea>
-                            {errors.description && (
-                                <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>
-                            )}
+                            {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>}
                         </div>
 
                         {/* Price */}
@@ -87,9 +141,7 @@ export default function AddProductPage() {
                                 })}
                                 className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:outline-none"
                             />
-                            {errors.price && (
-                                <p className="text-red-500 text-sm mt-1">{errors.price.message}</p>
-                            )}
+                            {errors.price && <p className="text-red-500 text-sm mt-1">{errors.price.message}</p>}
                         </div>
 
                         {/* Image URL */}
@@ -104,17 +156,16 @@ export default function AddProductPage() {
                                 {...register("image", { required: "Image URL is required" })}
                                 className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:outline-none"
                             />
-                            {errors.image && (
-                                <p className="text-red-500 text-sm mt-1">{errors.image.message}</p>
-                            )}
+                            {errors.image && <p className="text-red-500 text-sm mt-1">{errors.image.message}</p>}
                         </div>
 
-                        {/* Submit */}
+                        {/* Submit Button */}
                         <button
                             type="submit"
+                            disabled={loading}
                             className="w-full bg-primary text-white font-semibold rounded-lg py-3 hover:bg-primary/90 transition"
                         >
-                            Add Product
+                            {loading ? "Adding..." : "Add Product"}
                         </button>
                     </form>
                 </div>

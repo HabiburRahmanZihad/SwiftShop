@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.2",
     "daisyui": "^5.0.50",
     "mongodb": "^6.18.0",
     "next": "15.5.0",
@@ -16,7 +17,8 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hook-form": "^7.62.0",
-    "react-icons": "^5.5.0"
+    "react-icons": "^5.5.0",
+    "sweetalert2": "^11.22.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

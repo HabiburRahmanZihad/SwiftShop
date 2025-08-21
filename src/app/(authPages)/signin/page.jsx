@@ -1,27 +1,48 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
+import { useState } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import Link from "next/link";
 import { FaEnvelope, FaLock, FaGoogle } from "react-icons/fa";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import Link from "next/link";
 
 export default function SignInPage() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const [errorMsg, setErrorMsg] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  const onSubmit = (data) => {
-    console.log("✅ Sign In Data:", data);
-    reset();
+  const onSubmit = async (data) => {
+    setLoading(true);
+    setErrorMsg("");
+
+    const res = await signIn("credentials", {
+      redirect: false,
+      email: data.email,
+      password: data.password,
+    });
+
+    setLoading(false);
+
+    if (res?.error) {
+      if (res.error === "EMAIL_NOT_FOUND") {
+        router.push("/signup");
+      } else if (res.error === "INVALID_PASSWORD") {
+        setErrorMsg("Invalid password");
+      } else {
+        setErrorMsg("Login failed");
+      }
+    } else {
+      router.push("/");
+    }
   };
 
+
   return (
-    <div className="bg-base-200  flex items-center justify-center px-4 py-12">
+    <div className="bg-base-200 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-4xl bg-white shadow-xl rounded-xl overflow-hidden grid md:grid-cols-2 gap-8">
         {/* Left: Illustration */}
         <div className="hidden md:flex items-center justify-center bg-primary/10 p-6">
@@ -82,27 +103,21 @@ export default function SignInPage() {
               )}
             </div>
 
+            {/* Error Message */}
+            {errorMsg && (
+              <p className="text-red-500 text-sm font-medium">{errorMsg}</p>
+            )}
+
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full bg-primary text-white font-semibold rounded-lg py-3 hover:bg-primary/90 transition"
+              className="w-full bg-primary text-white font-semibold rounded-lg py-3 hover:bg-primary/90 transition disabled:opacity-60"
+              disabled={loading}
             >
-              Login
+              {loading ? "Logging in..." : "Login"}
             </button>
           </form>
 
-          {/* Divider */}
-          <div className="flex items-center my-6">
-            <hr className="flex-grow border-gray-300" />
-            <span className="mx-2 text-gray-500">or</span>
-            <hr className="flex-grow border-gray-300" />
-          </div>
-
-          {/* Google Sign In */}
-          <button className="w-full flex items-center justify-center gap-3 bg-gray-100 border border-gray-300 py-2 rounded-lg hover:bg-gray-200 transition">
-            <FaGoogle className="text-red-500" />
-            <span className="text-sm font-medium text-gray-700">Sign in with Google</span>
-          </button>
 
           {/* Switch to Sign Up */}
           <p className="mt-6 text-center text-sm text-gray-600">

@@ -2,14 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 
 export default function Navbar() {
     const pathname = usePathname();
+    const { data: session } = useSession(); // ✅ Get auth session
+    const isUser = !!session;
 
-    // TODO: Replace with real auth state (e.g., from context or a hook)
-    const isUser = false; // Simulating a logged-in user
+    console.log(isUser);
 
-    // Helper for active route styling
     const navItemClass = (href) =>
         pathname === href
             ? "bg-primary text-white px-4 py-2 rounded-md"
@@ -40,7 +41,7 @@ export default function Navbar() {
 
                     {isUser && (
                         <li>
-                            <Link className={navItemClass("/add-product")} href="/add-product">
+                            <Link className={navItemClass("/dashboard/add-product")} href="/dashboard/add-product">
                                 Add Product
                             </Link>
                         </li>
@@ -61,7 +62,7 @@ export default function Navbar() {
 
             {/* Auth Buttons */}
             <div className="flex-none space-x-2">
-                {!isUser && (
+                {!isUser ? (
                     <>
                         <Link
                             href="/signin"
@@ -76,15 +77,13 @@ export default function Navbar() {
                             Sign Up
                         </Link>
                     </>
-                )}
-
-                {isUser && (
-                    <Link
-                        href="/signout"
-                        className={`btn border-none bg-[#E8EDF5] ${navItemClass("/signout")}`}
+                ) : (
+                    <button
+                        onClick={() => signOut({ callbackUrl: "/signin" })}
+                        className="btn border-none rounded-md bg-[#E8EDF5] hover:bg-red-500 hover:text-white"
                     >
                         Sign Out
-                    </Link>
+                    </button>
                 )}
             </div>
         </nav>
