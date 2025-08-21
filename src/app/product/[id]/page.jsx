@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
+import GlobalLoading from "@/app/loading";
 
 export default function ProductDetails() {
     const { id } = useParams(); // ✅ Correct for 'use client'
@@ -42,7 +43,7 @@ export default function ProductDetails() {
     }, [id]);
 
     if (loading) {
-        return <div className="p-8 text-center text-gray-600">Loading...</div>;
+        return <GlobalLoading></GlobalLoading>;
     }
 
     if (!product) {

@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Swal from 'sweetalert2'; // ✅ Import SweetAlert2
+import GlobalLoading from "@/app/loading";
 
 export default function AddProductPage() {
     const {
@@ -25,7 +26,7 @@ export default function AddProductPage() {
         }
     }, [status, router]);
 
-    if (status === "loading") return <p className="text-center mt-20">Loading...</p>;
+    if (status === "loading") return <GlobalLoading></GlobalLoading>;
 
     // ✅ Form submit handler
     const onSubmit = async (data) => {

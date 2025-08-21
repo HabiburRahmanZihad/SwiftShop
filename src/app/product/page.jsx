@@ -1,6 +1,7 @@
 'use client';
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import GlobalLoading from "@/app/loading";
 
 export default function ProductPage() {
     const [products, setProducts] = useState([]);
@@ -27,7 +28,7 @@ export default function ProductPage() {
     const currentProducts = products.slice(indexOfFirst, indexOfLast);
     const totalPages = Math.ceil(products.length / productsPerPage);
 
-    if (loading) return <p className="text-center mt-20">Loading products...</p>;
+    if (loading) return <GlobalLoading></GlobalLoading>;
 
     return (
         <section className="px-4 sm:px-6 lg:px-8 py-12">
