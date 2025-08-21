@@ -1,11 +1,11 @@
 import Banner from "./components/Home/Banner";
-import FeatureProducts from "./components/Home/FeatureProducts";
+import ProductHighlights from "./components/Home/ProductHighlights";
 
 export default function Home() {
   return (
     <>
       <Banner />
-      <FeatureProducts />
+      <ProductHighlights />
     </>
   );
 }

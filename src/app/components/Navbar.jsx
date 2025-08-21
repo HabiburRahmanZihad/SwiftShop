@@ -13,7 +13,7 @@ export default function Navbar() {
 
     return (
         <div className="navbar pl-2 bg-base-100 border-b-2 border-base-300 px-6 sticky top-0 z-50">
-            <div className="container mx-auto flex items-center justify-between ">
+            {/* <div className="container mx-auto flex items-center justify-between "> */}
                 {/* Logo / Brand */}
                 <div className="flex-1">
                     <Link href="/" className="text-2xl font-bold text-primary">
@@ -45,6 +45,6 @@ export default function Navbar() {
                     <Link className={`btn border-none bg-[#E8EDF5] ${navItemClass("/signup")}`} href="/signup">Sign Up</Link>
                 </div>
             </div>
-        </div>
+        // </div>
     );
 }
