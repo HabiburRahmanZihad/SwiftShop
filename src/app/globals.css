@@ -1,26 +1,102 @@
+/* ============================
+    Import Google Fonts
+============================ */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+
+/* ============================
+    Import Tailwind CSS Core
+============================ */
 @import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@tailwind utilities;
+/* ============================
+    DaisyUI Theme Configuration
+============================ */
+@plugin "daisyui" {
+    themes: light --default, dark;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* 🌞 Light Theme  */
+@plugin "daisyui/theme" {
+    name: "light";
+    default: true;
+
+    --color-primary: #2563EB; 
+    /* Professional blue (buttons, links) */
+
+    --color-secondary: #F59E0B; 
+    /* Golden amber (accents, highlights) */
+
+    --color-accent: #10B981; 
+    /* Emerald green (success states, icons) */
+
+    --color-neutral: #1F2937; 
+    /* Neutral dark gray for text */
+
+    --color-base-100: #FFFFFF; 
+    /* Background */
+
+    --color-base-200: #F9FAFB; 
+    /* Light gray background for cards */
+
+    --color-base-300: #E5E7EB; 
+    /* Borders & dividers */
+
+    --color-info: #3B82F6; 
+    /* Info messages */
+
+    --color-success: #22C55E; 
+    /* Success green */
+
+    --color-warning: #FBBF24; 
+    /* Warning amber */
+
+    --color-error: #EF4444; 
+    /* Error red */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* 🌙 Dark Theme  */
+@plugin "daisyui/theme" {
+    name: "dark";
+
+    --color-primary: #60A5FA; 
+    /* Softer blue for dark BG */
+
+    --color-secondary: #FCD34D; 
+    /* Warm golden accent */
+
+    --color-accent: #34D399; 
+    /* Bright emerald */
+
+    --color-neutral: #D1D5DB; 
+    /* Neutral light gray for text */
+
+    --color-base-100: #111827; 
+    /* Dark base background */
+
+    --color-base-200: #1F2937; 
+    /* Card background */
+
+    --color-base-300: #374151; 
+    /* Borders, input backgrounds */
+
+    --color-info: #60A5FA; 
+    /* Info blue */
+
+    --color-success: #4ADE80; 
+    /* Success green */
+
+    --color-warning: #FACC15; 
+    /* Warning yellow */
+
+    --color-error: #F87171; 
+    /* Error red */
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+
+/* ============================
+    Global Styling
+============================ */
+
+* {
+  font-family: "Plus Jakarta Sans", sans-serif;
 }
