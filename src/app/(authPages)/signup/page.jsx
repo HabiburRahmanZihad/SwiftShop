@@ -75,7 +75,7 @@ export default function SignUpPage() {
     };
 
     return (
-        <div className="bg-base-200 flex items-center justify-center px-4 py-12">
+        <div className="bg-base-200 min-h-[calc(100vh-130px)]  flex items-center justify-center px-4 py-12">
             <div className="w-full max-w-4xl bg-white shadow-xl rounded-xl overflow-hidden grid md:grid-cols-2 gap-8">
                 {/* Illustration */}
                 <div className="hidden md:flex items-center justify-center bg-primary/10 p-6">

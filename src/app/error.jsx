@@ -10,7 +10,7 @@ export default function GlobalError({ error, reset }) {
     }, [error]);
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-base-200 text-center px-4">
+        <div className="min-h-[calc(100vh-130px)]  flex flex-col items-center justify-center bg-base-200 text-center px-4">
             <h1 className="text-4xl font-bold text-red-600 mb-4">Something went wrong</h1>
             <p className="text-gray-700 mb-6">We’re sorry, but an unexpected error occurred.</p>
 

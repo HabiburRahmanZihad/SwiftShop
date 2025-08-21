@@ -9,7 +9,6 @@ export default function Navbar() {
     const { data: session } = useSession(); // ✅ Get auth session
     const isUser = !!session;
 
-    console.log(isUser);
 
     const navItemClass = (href) =>
         pathname === href
@@ -41,7 +40,8 @@ export default function Navbar() {
 
                     {isUser && (
                         <li>
-                            <Link className={navItemClass("/dashboard/add-product")} href="/dashboard/add-product">
+                            <Link className={navItemClass("/dashboard/add-product")}
+                                href="/dashboard/add-product">
                                 Add Product
                             </Link>
                         </li>

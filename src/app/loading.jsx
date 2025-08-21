@@ -1,6 +1,6 @@
 export default function GlobalLoading() {
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-base-100 text-center px-4">
+        <div className="flex flex-col items-center justify-center min-h-[calc(100vh-130px)]  bg-base-100 text-center px-4">
             {/* Spinner */}
             <div className="relative w-16 h-16">
                 <div className="absolute inset-0 rounded-full border-4 border-primary border-t-transparent animate-spin" />
