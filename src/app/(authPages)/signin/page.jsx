@@ -4,20 +4,20 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { FaEnvelope, FaLock, FaGoogle } from "react-icons/fa";
+import { FaEnvelope, FaLock } from "react-icons/fa";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import Link from "next/link";
+import Swal from "sweetalert2"; // ✅ Import SweetAlert2
 
 export default function SignInPage() {
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const [errorMsg, setErrorMsg] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  // ✅ Form submit handler
   const onSubmit = async (data) => {
     setLoading(true);
-    setErrorMsg("");
 
     const res = await signIn("credentials", {
       redirect: false,
@@ -29,17 +29,43 @@ export default function SignInPage() {
 
     if (res?.error) {
       if (res.error === "EMAIL_NOT_FOUND") {
+        // ⚠️ Email not found – redirect to sign up
+        await Swal.fire({
+          icon: "warning",
+          title: "Email Not Found",
+          text: "No account found with that email. Redirecting to Sign Up...",
+          confirmButtonColor: "#3085d6",
+        });
         router.push("/signup");
       } else if (res.error === "INVALID_PASSWORD") {
-        setErrorMsg("Invalid password");
+        // ❌ Invalid password
+        await Swal.fire({
+          icon: "error",
+          title: "Login Failed",
+          text: "Invalid password. Please try again.",
+          confirmButtonColor: "#d33",
+        });
       } else {
-        setErrorMsg("Login failed");
+        // ❌ Unknown error
+        await Swal.fire({
+          icon: "error",
+          title: "Login Failed",
+          text: "Something went wrong. Please try again later.",
+          confirmButtonColor: "#d33",
+        });
       }
     } else {
+      // ✅ Login successful
+      await Swal.fire({
+        icon: "success",
+        title: "Welcome Back!",
+        text: "You have logged in successfully.",
+        confirmButtonColor: "#3085d6",
+      });
+
       router.push("/");
     }
   };
-
 
   return (
     <div className="bg-base-200 flex items-center justify-center px-4 py-12">
@@ -103,11 +129,6 @@ export default function SignInPage() {
               )}
             </div>
 
-            {/* Error Message */}
-            {errorMsg && (
-              <p className="text-red-500 text-sm font-medium">{errorMsg}</p>
-            )}
-
             {/* Submit Button */}
             <button
               type="submit"
@@ -117,7 +138,6 @@ export default function SignInPage() {
               {loading ? "Logging in..." : "Login"}
             </button>
           </form>
-
 
           {/* Switch to Sign Up */}
           <p className="mt-6 text-center text-sm text-gray-600">
