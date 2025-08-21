@@ -4,9 +4,10 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { FaUser, FaEnvelope, FaLock, FaGoogle } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import Link from "next/link";
+import Swal from "sweetalert2"; // ✅ Import SweetAlert2
 
 export default function SignUpPage() {
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
@@ -14,6 +15,7 @@ export default function SignUpPage() {
     const [showPassword, setShowPassword] = useState(false);
     const router = useRouter();
 
+    // ✅ Handle form submit
     const onSubmit = async (data) => {
         setLoading(true);
 
@@ -28,17 +30,37 @@ export default function SignUpPage() {
 
         if (!res.ok) {
             if (result.error === "User already exists") {
-                alert("You are already our member. Redirecting to sign in.");
+                // ⚠️ Already registered user
+                await Swal.fire({
+                    icon: "warning",
+                    title: "Already Registered",
+                    text: "You are already a member. Redirecting to Sign In...",
+                    confirmButtonColor: "#3085d6",
+                });
                 router.push("/signin");
             } else {
-                alert(result.error);
+                // ❌ Generic signup error
+                await Swal.fire({
+                    icon: "error",
+                    title: "Sign Up Failed",
+                    text: result.error || "Something went wrong.",
+                    confirmButtonColor: "#d33",
+                });
             }
             return;
         }
 
-        reset(); // Clear form fields after success
+        // ✅ Success — clear form and show success alert
+        reset();
 
-        // Auto sign-in
+        await Swal.fire({
+            icon: "success",
+            title: "Account Created",
+            text: "Your account has been created successfully. Logging you in...",
+            confirmButtonColor: "#3085d6",
+        });
+
+        // ✅ Auto-login after signup
         const signInResult = await signIn("credentials", {
             redirect: false,
             email: data.email,
@@ -140,8 +162,6 @@ export default function SignUpPage() {
                             {loading ? "Signing up..." : "Sign Up"}
                         </button>
                     </form>
-
-
 
                     {/* Switch to Login */}
                     <p className="mt-6 text-center text-sm text-gray-600">

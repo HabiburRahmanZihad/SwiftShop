@@ -36,7 +36,7 @@ export default function SignInPage() {
           text: "No account found with that email. Redirecting to Sign Up...",
           confirmButtonColor: "#3085d6",
         });
-        router.push("/signup");
+        // router.push("/signup");
       } else if (res.error === "INVALID_PASSWORD") {
         // ❌ Invalid password
         await Swal.fire({
