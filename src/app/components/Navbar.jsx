@@ -7,7 +7,7 @@ export default function Navbar() {
     const pathname = usePathname();
 
     // TODO: Replace with real auth state (e.g., from context or a hook)
-    const isUser = true; // Simulating a logged-in user
+    const isUser = false; // Simulating a logged-in user
 
     // Helper for active route styling
     const navItemClass = (href) =>

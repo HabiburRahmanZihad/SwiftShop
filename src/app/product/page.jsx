@@ -23,7 +23,7 @@ export default function ProductPage() {
     const totalPages = Math.ceil(products.length / productsPerPage);
 
     return (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <section className="px-4 sm:px-6 lg:px-8 py-12">
             {/* Heading */}
             <h1 className="text-center  text-3xl font-bold mb-10 text-neutral">
                 Our Products
