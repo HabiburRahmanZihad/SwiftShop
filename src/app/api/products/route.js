@@ -19,3 +19,16 @@ export async function POST(req) {
         return NextResponse.json({ message: error.message }, { status: 500 });
     }
 }
+
+export async function GET() {
+    try {
+        const client = new MongoClient(uri);
+        await client.connect();
+        const db = client.db(dbName);
+        const products = await db.collection("products").find({}).toArray();
+
+        return NextResponse.json(products);
+    } catch (error) {
+        return NextResponse.json({ error: "Failed to fetch products." }, { status: 500 });
+    }
+}

@@ -1,29 +1,45 @@
 'use client';
 
 import Link from "next/link";
-import { useState, useEffect, use } from "react";
+import { useParams } from "next/navigation";
+import { useState, useEffect } from "react";
 
-export default function ProductDetails({ params }) {
-    // Unwrap the params (required for latest Next.js)
-    const { id } = use(params); // ⬅️ This is the key change
+export default function ProductDetails() {
+    const { id } = useParams(); // ✅ Correct for 'use client'
 
-    const [products, setProducts] = useState([]);
+    const [product, setProduct] = useState(null);
+    const [relatedProducts, setRelatedProducts] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch("/productsdata.json")
-            .then((res) => res.json())
-            .then((data) => {
-                setProducts(data);
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.error("Error fetching products:", error);
-                setLoading(false);
-            });
-    }, []);
+        if (!id) return;
 
-    const product = products.find((p) => p.service_id === id);
+        // Fetch the single product
+        const fetchProduct = async () => {
+            try {
+                const res = await fetch(`/api/products/${id}`);
+                if (!res.ok) throw new Error("Failed to fetch product");
+                const data = await res.json();
+                setProduct(data);
+            } catch (err) {
+                console.error(err);
+            }
+        };
+
+        // Fetch all products for related section
+        const fetchRelated = async () => {
+            try {
+                const res = await fetch(`/api/products`);
+                if (!res.ok) throw new Error("Failed to fetch related products");
+                const data = await res.json();
+                setRelatedProducts(data);
+            } catch (err) {
+                console.error(err);
+            }
+        };
+
+        Promise.all([fetchProduct(), fetchRelated()]).finally(() => setLoading(false));
+    }, [id]);
 
     if (loading) {
         return <div className="p-8 text-center text-gray-600">Loading...</div>;
@@ -40,7 +56,7 @@ export default function ProductDetails({ params }) {
         );
     }
 
-    const relatedProducts = products.filter((p) => p.service_id !== product.service_id);
+    const filteredRelated = relatedProducts.filter(p => p.service_id !== product.service_id).slice(0, 4);
 
     return (
         <div className="py-4 px-4 sm:px-6 lg:px-8">
@@ -82,7 +98,7 @@ export default function ProductDetails({ params }) {
             <div className="mt-12">
                 <h2 className="text-xl font-bold mb-6">Related Products</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-                    {relatedProducts.slice(0, 4).map((related) => (
+                    {filteredRelated.map((related) => (
                         <div
                             key={related.service_id}
                             className="bg-white p-4 rounded-lg shadow hover:shadow-lg transition"
