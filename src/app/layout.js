@@ -26,8 +26,7 @@ export default function RootLayout({ children }) {
       >
 
         <Navbar></Navbar>
-        <main className="container mx-auto">
-
+        <main className="container mx-auto min-h-[calc(100vh-130px)]">
           {children}
         </main>
         <Footer></Footer>
