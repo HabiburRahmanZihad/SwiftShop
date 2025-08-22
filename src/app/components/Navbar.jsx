@@ -40,9 +40,9 @@ export default function Navbar() {
 
                     {isUser && (
                         <li>
-                            <Link className={navItemClass("/dashboard/add-product")}
-                                href="/dashboard/add-product">
-                                Add Product
+                            <Link className={navItemClass("/dashboard")}
+                                href="/dashboard">
+                                Dashboard
                             </Link>
                         </li>
                     )}
