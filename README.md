@@ -11,7 +11,7 @@
 
 **SwiftShop** is an online shopping platform that offers a seamless user experience for browsing products, managing them, and adding new ones to the catalog. Users can sign in, view products, and for authenticated users, add new products via a protected dashboard.
 
-🔗 [**Live Site**](https://swiftshop-web.vercel.app)
+🔗 [**Live Site**](https://swift-shop-web.vercel.app/)
 
 ---
 
